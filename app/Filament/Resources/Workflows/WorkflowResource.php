@@ -9,6 +9,7 @@ use App\Filament\Resources\Workflows\Pages\EditWorkflow;
 use App\Filament\Resources\Workflows\Pages\ListWorkflows;
 use App\Models\EmailTemplate;
 use App\Models\Workflow;
+use App\Support\EnumValue;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ReplicateAction;
@@ -49,7 +50,7 @@ class WorkflowResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $usesTemplate = fn (Get $get) => in_array($get('type'), [AutomationType::Email->value, AutomationType::Sms->value, AutomationType::Questionnaire->value], true);
+        $usesTemplate = fn (Get $get) => in_array(EnumValue::of($get('type')), [AutomationType::Email->value, AutomationType::Sms->value, AutomationType::Questionnaire->value], true);
 
         return $schema
             ->columns(1)
@@ -75,7 +76,7 @@ class WorkflowResource extends Resource
                             ->defaultItems(0)
                             ->addActionLabel('Add stage')
                             ->itemLabel(fn (array $state): ?string => trim(($state['name'] ?? 'New stage')
-                                .(isset($state['category']) && $state['category'] ? ' · '.(StageCategory::tryFrom(is_string($state['category']) ? $state['category'] : $state['category']->value)?->getLabel()) : '')
+                                .(isset($state['category']) && $state['category'] ? ' · '.(StageCategory::tryFrom((string) EnumValue::of($state['category']))?->getLabel()) : '')
                                 .(! empty($state['automations']) ? ' · ⚡ '.count($state['automations']) : '')))
                             ->columns(['default' => 1, 'sm' => 2, 'lg' => 5])
                             ->schema([
@@ -104,7 +105,7 @@ class WorkflowResource extends Resource
                                     ->collapsible()
                                     ->reorderable()
                                     ->addActionLabel('Add automation')
-                                    ->itemLabel(fn (array $state): ?string => AutomationType::tryFrom($state['type'] ?? '')?->getLabel() ?? 'New automation')
+                                    ->itemLabel(fn (array $state): ?string => AutomationType::tryFrom((string) EnumValue::of($state['type'] ?? ''))?->getLabel() ?? 'New automation')
                                     ->schema([
                                         Select::make('type')
                                             ->options(AutomationType::class)
@@ -123,14 +124,14 @@ class WorkflowResource extends Resource
                                             ->minValue(0)
                                             ->maxValue(100)
                                             ->default(50)
-                                            ->visible(fn (Get $get) => $get('type') === AutomationType::AutoReject->value),
+                                            ->visible(fn (Get $get) => EnumValue::of($get('type')) === AutomationType::AutoReject->value),
                                         TextInput::make('note')
                                             ->label('Task')
                                             ->placeholder('e.g. Call candidate within 24 hours')
-                                            ->visible(fn (Get $get) => $get('type') === AutomationType::Task->value),
+                                            ->visible(fn (Get $get) => EnumValue::of($get('type')) === AutomationType::Task->value),
                                         TextInput::make('subject')
                                             ->placeholder('Uses template subject')
-                                            ->visible(fn (Get $get) => in_array($get('type'), [AutomationType::Email->value, AutomationType::Questionnaire->value], true) && ! $get('template_id')),
+                                            ->visible(fn (Get $get) => in_array(EnumValue::of($get('type')), [AutomationType::Email->value, AutomationType::Questionnaire->value], true) && ! $get('template_id')),
                                         Textarea::make('body')
                                             ->rows(3)
                                             ->placeholder('Merge fields: {first_name} {job_title} {company} {stage}')

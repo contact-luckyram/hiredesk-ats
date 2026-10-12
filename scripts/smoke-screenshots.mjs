@@ -31,10 +31,16 @@ for (const [device, viewport] of [['desktop', { width: 1440, height: 900 }], ['m
             status = res ? res.status() : 0;
             await page.waitForTimeout(300);
             const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+            const culprits = overflow > 2 ? await page.evaluate(() => [...document.querySelectorAll('body *')]
+                .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 2 && getComputedStyle(el).position !== 'fixed')
+                .filter((el) => ![...el.children].some((c) => c.getBoundingClientRect().right > window.innerWidth + 2))
+                .slice(0, 6)
+                .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')} right=${Math.round(el.getBoundingClientRect().right)} parents=${[el.parentElement, el.parentElement?.parentElement].map((p) => p ? p.tagName.toLowerCase() + '.' + [...p.classList].slice(0, 3).join('.') : '').join(' < ')}`)) : [];
             await page.screenshot({ path: `${out}/${device}-${name}.png`, fullPage: device === 'desktop' ? false : true });
             const bad = status >= 400 || status === 0;
             if (bad) failures++;
-            report.push({ device, name, path, status, overflow, errors: [...errors].slice(0, 5) });
+            report.push({ device, name, path, status, overflow, culprits, errors: [...errors].slice(0, 5) });
+            culprits.forEach((c) => console.log('     overflow: ' + c));
             console.log(`${bad ? 'FAIL' : 'ok  '} ${device} ${status} ${name}${overflow > 2 ? ` (horizontal overflow ${overflow}px)` : ''}${errors.length ? ' console: ' + errors[0].slice(0, 160) : ''}`);
         } catch (e) {
             failures++;

@@ -36,7 +36,7 @@ class EmailTemplateResource extends Resource
         return $schema->columns(2)->components([
             TextInput::make('name')->required()->maxLength(80),
             Select::make('channel')->options(MessageChannel::class)->required()->default('email')->live()->native(false),
-            TextInput::make('subject')->maxLength(150)->columnSpanFull()->visible(fn (Get $get) => $get('channel') !== MessageChannel::Sms->value && $get('channel') !== MessageChannel::Sms),
+            TextInput::make('subject')->maxLength(150)->columnSpanFull()->visible(fn (Get $get) => \App\Support\EnumValue::of($get('channel')) !== MessageChannel::Sms->value),
             Textarea::make('body')
                 ->required()
                 ->rows(8)

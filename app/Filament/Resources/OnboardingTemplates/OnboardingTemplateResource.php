@@ -8,6 +8,7 @@ use App\Filament\Resources\OnboardingTemplates\Pages\CreateOnboardingTemplate;
 use App\Filament\Resources\OnboardingTemplates\Pages\EditOnboardingTemplate;
 use App\Filament\Resources\OnboardingTemplates\Pages\ListOnboardingTemplates;
 use App\Models\OnboardingTemplate;
+use App\Support\EnumValue;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Repeater;
@@ -60,7 +61,7 @@ class OnboardingTemplateResource extends Resource
                             ->collapsed()
                             ->cloneable()
                             ->addActionLabel('Add task')
-                            ->itemLabel(fn (array $state) => ($state['title'] ?? 'New task').' · '.(TaskType::tryFrom($state['type'] ?? '')?->getLabel() ?? '').' · '.(TaskAssignee::tryFrom($state['assignee'] ?? '')?->getLabel() ?? ''))
+                            ->itemLabel(fn (array $state) => ($state['title'] ?? 'New task').' · '.(TaskType::tryFrom((string) EnumValue::of($state['type'] ?? ''))?->getLabel() ?? '').' · '.(TaskAssignee::tryFrom((string) EnumValue::of($state['assignee'] ?? ''))?->getLabel() ?? ''))
                             ->columns(['default' => 1, 'md' => 4])
                             ->schema([
                                 TextInput::make('title')->required()->columnSpan(['md' => 2]),
@@ -72,13 +73,13 @@ class OnboardingTemplateResource extends Resource
                                     ->label('Document text to sign')
                                     ->rows(4)
                                     ->columnSpanFull()
-                                    ->visible(fn (Get $get) => $get('type') === TaskType::Document->value),
+                                    ->visible(fn (Get $get) => EnumValue::of($get('type')) === TaskType::Document->value),
                                 Repeater::make('fields')
                                     ->label('Form fields')
                                     ->columnSpanFull()
                                     ->columns(['default' => 1, 'md' => 4])
                                     ->addActionLabel('Add field')
-                                    ->visible(fn (Get $get) => $get('type') === TaskType::Form->value)
+                                    ->visible(fn (Get $get) => EnumValue::of($get('type')) === TaskType::Form->value)
                                     ->schema([
                                         TextInput::make('label')->required(),
                                         TextInput::make('name')->label('Key')->required()->alphaDash(),

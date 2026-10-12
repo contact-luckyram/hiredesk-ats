@@ -180,7 +180,7 @@ class RecruitingSeeder extends Seeder
     private function bulk(Collection $jobs): void
     {
         $weights = [
-            'applied' => 22, 'review' => 18, 'interview' => 10, 'offer' => 2, 'hired' => 9, 'rejected' => 39,
+            'applied' => 15, 'review' => 14, 'interview' => 10, 'offer' => 2, 'hired' => 10, 'rejected' => 49,
         ];
 
         foreach ($jobs as $job) {
@@ -197,9 +197,11 @@ class RecruitingSeeder extends Seeder
             for ($i = 0; $i < $count; $i++) {
                 $category = $this->weighted($weights);
                 $stage = ($stages[$category] ?? $stages['applied'])->random();
-                $daysAgo = in_array($category, ['applied', 'review'], true)
-                    ? mt_rand(0, 12)
-                    : 6 + (int) round(pow(mt_rand() / mt_getrandmax(), 1.7) * 280);
+                $daysAgo = match ($category) {
+                    'applied' => mt_rand(0, 10),
+                    'review' => mt_rand(2, 21),
+                    default => 6 + (int) round(pow(mt_rand() / mt_getrandmax(), 1.35) * 280),
+                };
                 $this->application($job, $this->pick(self::FIRST), $this->pick(self::LAST), $stage->name, $this->weighted(self::SOURCES), $daysAgo, []);
             }
         }
