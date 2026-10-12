@@ -1,0 +1,19 @@
+# Render Blueprint: one free web service running the Dockerfile.
+# Deploy: render.com → New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: hiredesk-ats
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    autoDeploy: true
+    envVars:
+      - key: APP_NAME
+        value: HireDesk
+      - key: DEMO_MODE
+        value: "true"
+      - key: HIREDESK_COMPANY
+        value: Acme Health Partners
