@@ -27,13 +27,13 @@ class ListApplications extends ListRecords
         return [
             'active' => Tab::make('Active')
                 ->badge(Application::active()->count())
-                ->modifyQueryUsing(fn (Builder $q) => $q->whereNull('rejected_at')->whereNull('hired_at')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereNull('rejected_at')->whereNull('hired_at')),
             'hired' => Tab::make('Hired')
                 ->badgeColor('success')
                 ->badge(Application::whereNotNull('hired_at')->count())
-                ->modifyQueryUsing(fn (Builder $q) => $q->whereNotNull('hired_at')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereNotNull('hired_at')),
             'rejected' => Tab::make('Not selected')
-                ->modifyQueryUsing(fn (Builder $q) => $q->whereNotNull('rejected_at')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereNotNull('rejected_at')),
             'all' => Tab::make('All'),
         ];
     }

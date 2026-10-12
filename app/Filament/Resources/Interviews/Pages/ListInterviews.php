@@ -20,9 +20,9 @@ class ListInterviews extends ListRecords
     public function getTabs(): array
     {
         return [
-            'upcoming' => Tab::make('Upcoming')->modifyQueryUsing(fn (Builder $q) => $q->where('scheduled_at', '>=', today())),
-            'week' => Tab::make('This week')->modifyQueryUsing(fn (Builder $q) => $q->whereBetween('scheduled_at', [now()->startOfWeek(), now()->endOfWeek()])),
-            'past' => Tab::make('Past')->modifyQueryUsing(fn (Builder $q) => $q->where('scheduled_at', '<', today())->reorder('scheduled_at', 'desc')),
+            'upcoming' => Tab::make('Upcoming')->modifyQueryUsing(fn (Builder $query) => $query->where('scheduled_at', '>=', today())),
+            'week' => Tab::make('This week')->modifyQueryUsing(fn (Builder $query) => $query->whereBetween('scheduled_at', [now()->startOfWeek(), now()->endOfWeek()])),
+            'past' => Tab::make('Past')->modifyQueryUsing(fn (Builder $query) => $query->where('scheduled_at', '<', today())->reorder('scheduled_at', 'desc')),
             'all' => Tab::make('All'),
         ];
     }

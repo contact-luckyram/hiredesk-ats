@@ -92,7 +92,7 @@ class OfferResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($q) => $q->with(['application.candidate', 'application.jobOpening']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['application.candidate', 'application.jobOpening']))
             ->columns([
                 TextColumn::make('application.candidate.first_name')->label('Candidate')
                     ->formatStateUsing(fn (Offer $r) => $r->application->candidate->name)

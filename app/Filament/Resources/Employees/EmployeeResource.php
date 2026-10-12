@@ -27,6 +27,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class EmployeeResource extends Resource
@@ -37,11 +38,16 @@ class EmployeeResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Onboard';
 
-    protected static ?string $navigationLabel = 'New hires & employees';
+    protected static ?string $navigationLabel = 'New hires';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'email';
+
+    public static function getRecordTitle(?Model $record): string
+    {
+        return $record?->name ?? 'Employee';
+    }
 
     public static function getNavigationBadge(): ?string
     {
@@ -108,7 +114,7 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($q) => $q->with(['tasks', 'department']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['tasks', 'department']))
             ->columns([
                 TextColumn::make('first_name')->label('Name')
                     ->formatStateUsing(fn (Employee $r) => $r->name)

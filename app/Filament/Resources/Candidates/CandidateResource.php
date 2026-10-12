@@ -56,6 +56,11 @@ class CandidateResource extends Resource
         return ['first_name', 'last_name', 'email', 'phone'];
     }
 
+    public static function getRecordTitle(?Model $record): string
+    {
+        return $record?->name ?? 'Candidate';
+    }
+
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         return $record->name;

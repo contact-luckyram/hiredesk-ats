@@ -72,7 +72,7 @@ class InterviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($q) => $q->with(['application.candidate', 'application.jobOpening']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['application.candidate', 'application.jobOpening']))
             ->columns([
                 TextColumn::make('scheduled_at')->label('When')->dateTime('D M j, g:i A')->sortable()
                     ->description(fn (Interview $r) => $r->duration_minutes.' min · '.$r->scheduled_at->diffForHumans()),

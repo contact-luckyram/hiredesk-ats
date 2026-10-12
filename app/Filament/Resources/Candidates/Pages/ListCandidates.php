@@ -24,11 +24,11 @@ class ListCandidates extends ListRecords
             'all' => Tab::make('All'),
             'new' => Tab::make('New this week')
                 ->badge(Candidate::where('created_at', '>=', now()->subWeek())->count())
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('created_at', '>=', now()->subWeek())),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('created_at', '>=', now()->subWeek())),
             'pool' => Tab::make('Talent pool')
                 ->badge(Candidate::where('in_talent_pool', true)->count())
                 ->badgeColor('success')
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('in_talent_pool', true)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('in_talent_pool', true)),
         ];
     }
 }

@@ -24,8 +24,8 @@ class ListEmployees extends ListRecords
             'onboarding' => Tab::make('Onboarding')
                 ->badge(Employee::where('status', 'onboarding')->count())
                 ->badgeColor('warning')
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('status', 'onboarding')),
-            'active' => Tab::make('Active')->modifyQueryUsing(fn (Builder $q) => $q->where('status', 'active')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'onboarding')),
+            'active' => Tab::make('Active')->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'active')),
             'all' => Tab::make('All'),
         ];
     }

@@ -197,7 +197,9 @@ class RecruitingSeeder extends Seeder
             for ($i = 0; $i < $count; $i++) {
                 $category = $this->weighted($weights);
                 $stage = ($stages[$category] ?? $stages['applied'])->random();
-                $daysAgo = in_array($category, ['applied', 'review'], true) ? mt_rand(0, 14) : mt_rand(5, 290);
+                $daysAgo = in_array($category, ['applied', 'review'], true)
+                    ? mt_rand(0, 12)
+                    : 6 + (int) round(pow(mt_rand() / mt_getrandmax(), 1.7) * 280);
                 $this->application($job, $this->pick(self::FIRST), $this->pick(self::LAST), $stage->name, $this->weighted(self::SOURCES), $daysAgo, []);
             }
         }
@@ -240,10 +242,12 @@ class RecruitingSeeder extends Seeder
             $score = max($score, 95);
         }
 
+        // Most active candidates are inside their stage SLA; roughly one in five is overdue.
+        $daysInStage = $stage->sla_days && mt_rand(1, 5) === 1 ? $stage->sla_days + mt_rand(1, 4) : mt_rand(0, max(0, ($stage->sla_days ?? 3) - 1));
         $stageEntered = match ($category) {
             StageCategory::Applied => $appliedAt,
-            StageCategory::Review => $appliedAt->clone()->addDays(min($daysAgo, mt_rand(0, 2))),
-            default => $appliedAt->clone()->addDays(min($daysAgo, mt_rand(6, 20))),
+            StageCategory::Hired, StageCategory::Rejected => $appliedAt->clone()->addDays(min($daysAgo, mt_rand(3, 20))),
+            default => now()->subDays(min($daysAgo, $daysInStage))->subHours(mt_rand(1, 8)),
         };
         $hiredAt = $category === StageCategory::Hired ? $appliedAt->clone()->addDays(min(max($daysAgo, 1), mt_rand(12, 34))) : null;
 
@@ -253,7 +257,7 @@ class RecruitingSeeder extends Seeder
             'stage_id' => $stage->id,
             'source' => $source,
             'score' => $score,
-            'knocked_out' => $result['knocked_out'] && $category !== StageCategory::Hired,
+            'knocked_out' => $result['knocked_out'] && in_array($category, [StageCategory::Applied, StageCategory::Review, StageCategory::Rejected], true),
             'rating' => $opt['rating'] ?? ($category === StageCategory::Applied ? null : mt_rand(2, 5)),
             'answers' => ['values' => $answers, 'breakdown' => $result['breakdown']],
             'eeo' => $this->eeo(),
@@ -279,14 +283,17 @@ class RecruitingSeeder extends Seeder
         if (! $q) {
             return [];
         }
-        $good = $category !== StageCategory::Rejected || mt_rand(0, 1);
+        $good = $category !== StageCategory::Rejected || mt_rand(0, 2) > 0;
+        $strong = ! in_array($category, [StageCategory::Applied, StageCategory::Review, StageCategory::Rejected], true);
 
-        return collect($q->questions)->mapWithKeys(function ($question) use ($good, $years) {
+        return collect($q->questions)->mapWithKeys(function ($question) use ($good, $strong, $years) {
             $value = match ($question['type']) {
-                'number' => (string) $years,
-                'choice' => $good ? $question['ideal'] : $question['options'][array_rand($question['options'])],
+                'number' => (string) max($years, $strong ? 2 : 0),
+                'choice' => $good || $strong ? $question['ideal'] : $question['options'][array_rand($question['options'])],
                 'text' => 'I love patient care and your team has a great reputation.',
-                default => ($good || ! $question['knockout']) && mt_rand(0, 8) ? 'yes' : 'no',
+                default => $question['knockout']
+                    ? ($strong || ($good && mt_rand(0, 9)) ? 'yes' : 'no')
+                    : ($strong || mt_rand(0, 3) ? 'yes' : 'no'),
             };
 
             return [$question['key'] => $value];

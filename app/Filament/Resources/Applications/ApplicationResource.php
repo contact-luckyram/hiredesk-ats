@@ -93,11 +93,11 @@ class ApplicationResource extends Resource
                 SelectFilter::make('category')
                     ->label('Stage type')
                     ->options(StageCategory::class)
-                    ->query(fn (Builder $q, array $data) => filled($data['value'] ?? null) ? $q->whereHas('stage', fn ($s) => $s->where('category', $data['value'])) : $q),
+                    ->query(fn (Builder $query, array $data) => filled($data['value'] ?? null) ? $query->whereHas('stage', fn ($s) => $s->where('category', $data['value'])) : $query),
                 SelectFilter::make('source')->options(fn () => Application::query()->whereNotNull('source')->distinct()->orderBy('source')->pluck('source', 'source')->all()),
                 Filter::make('min_score')
                     ->schema([TextInput::make('min')->label('Minimum score')->numeric()->minValue(0)->maxValue(100)])
-                    ->query(fn (Builder $q, array $data) => filled($data['min'] ?? null) ? $q->where('score', '>=', (int) $data['min']) : $q)
+                    ->query(fn (Builder $query, array $data) => filled($data['min'] ?? null) ? $query->where('score', '>=', (int) $data['min']) : $query)
                     ->indicateUsing(fn (array $data) => filled($data['min'] ?? null) ? "Score ≥ {$data['min']}" : null),
                 TernaryFilter::make('knocked_out')->label('Knock-out'),
             ])
