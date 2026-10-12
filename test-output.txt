@@ -1,0 +1,28 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\ExampleTest[39m
+  [32;1m✓[39;22m[90m [39m[90mthat true is true[39m
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\AdminPagesTest[39m
+  [32;1m✓[39;22m[90m [39m[90mdemo data is seeded[39m[90m                                                 [39m [90m0.57s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdashboard pipeline and reports render[39m[90m                               [39m [90m0.28s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevery resource index renders[39m[90m                                        [39m [90m0.67s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcreate and edit pages render[39m[90m                                        [39m [90m0.54s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcandidate profile renders for every stage type[39m[90m                      [39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmoving a card runs stage automations[39m[90m                                [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmoving to offer drafts an offer and hiring starts onboarding[39m[90m        [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mics and csv exports[39m[90m                                                 [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PublicSiteTest[39m
+  [32;1m✓[39;22m[90m [39m[90mlanding and careers pages[39m[90m                                           [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90munpublished jobs are hidden[39m[90m                                         [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mapplying scores the questionnaire and parses the resume[39m[90m             [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mknockout answer is flagged[39m[90m                                          [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mapply validation errors[39m[90m                                             [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtalent pool signup[39m[90m                                                  [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcandidate can sign an offer[39m[90m                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnew hire completes portal tasks[39m[90m                                     [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff files require login[39m[90m                                           [39m [90m0.01s[39m  
+
+  [90mTests:[39m    [32;1m18 passed[39;22m[90m (119 assertions)[39m
+  [90mDuration:[39m [39m2.75s[39m
+

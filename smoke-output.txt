@@ -1,0 +1,60 @@
+ok   desktop 200 landing
+ok   desktop 200 careers
+ok   desktop 200 careers-search
+ok   desktop 200 job
+ok   desktop 200 apply
+ok   desktop 200 talent-pool
+ok   desktop 200 offer-sign
+ok   desktop 200 portal
+ok   desktop 200 admin-dashboard
+     overflow: board chain: div.hd-board=1126(grid,ox:auto) < div.fi-page-content=1126(grid,ox:visible) < div.fi-page-main=1126(block,ox:visible) < div.fi-page-header-main-ctn=1126(flex,ox:visible) < div.fi-page=1126(block,ox:visible) < main.fi-main.fi-width-full=1184(block,ox:visible) < div.fi-main-ctn.fi-main-ctn-sidebar-open=1184(flex,ox:visible) < div.fi-layout=1440(flex,ox:clip) < body.fi-body.fi-panel-admin.fi-body-has-navigation.fi-body-has-sidebar-collapsible-on-desktop=1440(block,ox:visible)
+ok   desktop 200 admin-pipeline (horizontal overflow 500px)
+ok   desktop 200 admin-candidate-profile
+ok   desktop 200 admin-applications
+ok   desktop 200 admin-jobs
+ok   desktop 200 admin-job-edit
+ok   desktop 200 admin-candidates
+ok   desktop 200 admin-candidate
+ok   desktop 200 admin-stages
+ok   desktop 200 admin-workflows
+ok   desktop 200 admin-interviews
+ok   desktop 200 admin-offers
+ok   desktop 200 admin-offer
+ok   desktop 200 admin-employees
+ok   desktop 200 admin-employee
+ok   desktop 200 admin-reports
+ok   desktop 200 admin-questionnaires
+ok   desktop 200 admin-onboarding-templates
+ok   desktop 200 admin-templates
+ok   desktop 200 admin-team
+ok   mobile 200 landing
+ok   mobile 200 careers
+ok   mobile 200 careers-search
+ok   mobile 200 job
+ok   mobile 200 apply
+ok   mobile 200 talent-pool
+ok   mobile 200 offer-sign
+ok   mobile 200 portal
+ok   mobile 200 admin-dashboard
+     overflow: board chain: div.hd-board=366(grid,ox:auto) < div.fi-page-content=366(grid,ox:visible) < div.fi-page-main=366(block,ox:visible) < div.fi-page-header-main-ctn=366(flex,ox:visible) < div.fi-page=366(block,ox:visible) < main.fi-main.fi-width-full=390(block,ox:visible) < div.fi-main-ctn.fi-main-ctn-sidebar-open=390(flex,ox:visible) < div.fi-layout=390(flex,ox:clip) < body.fi-body.fi-panel-admin.fi-body-has-navigation.fi-body-has-sidebar-collapsible-on-desktop=390(block,ox:visible)
+ok   mobile 200 admin-pipeline (horizontal overflow 12px)
+ok   mobile 200 admin-candidate-profile
+ok   mobile 200 admin-applications
+ok   mobile 200 admin-jobs
+ok   mobile 200 admin-job-edit
+ok   mobile 200 admin-candidates
+ok   mobile 200 admin-candidate
+ok   mobile 200 admin-stages
+ok   mobile 200 admin-workflows
+ok   mobile 200 admin-interviews
+ok   mobile 200 admin-offers
+ok   mobile 200 admin-offer
+ok   mobile 200 admin-employees
+ok   mobile 200 admin-employee
+ok   mobile 200 admin-reports
+ok   mobile 200 admin-questionnaires
+ok   mobile 200 admin-onboarding-templates
+ok   mobile 200 admin-templates
+ok   mobile 200 admin-team
+
+0 failing page(s)
