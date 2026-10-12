@@ -31,11 +31,21 @@ for (const [device, viewport] of [['desktop', { width: 1440, height: 900 }], ['m
             status = res ? res.status() : 0;
             await page.waitForTimeout(300);
             const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-            const culprits = overflow > 2 ? await page.evaluate(() => [...document.querySelectorAll('body *')]
-                .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 2 && getComputedStyle(el).position !== 'fixed')
-                .filter((el) => ![...el.children].some((c) => c.getBoundingClientRect().right > window.innerWidth + 2))
-                .slice(0, 6)
-                .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')} right=${Math.round(el.getBoundingClientRect().right)} parents=${[el.parentElement, el.parentElement?.parentElement].map((p) => p ? p.tagName.toLowerCase() + '.' + [...p.classList].slice(0, 3).join('.') : '').join(' < ')}`)) : [];
+            const culprits = overflow > 2 ? await page.evaluate(() => {
+                const clipped = (el) => { for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) { if (getComputedStyle(p).overflowX !== 'visible') return true; } return false; };
+                const name = (el) => el.tagName.toLowerCase() + '.' + [...el.classList].slice(0, 4).join('.');
+                const out = [...document.querySelectorAll('body *')]
+                    .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 2 && getComputedStyle(el).position !== 'fixed' && !clipped(el))
+                    .slice(0, 8)
+                    .map((el) => `${name(el)} w=${Math.round(el.getBoundingClientRect().width)} right=${Math.round(el.getBoundingClientRect().right)}`);
+                const board = document.querySelector('.hd-board');
+                if (board) {
+                    const chain = [];
+                    for (let p = board; p && p !== document.documentElement; p = p.parentElement) chain.push(`${name(p)}=${Math.round(p.getBoundingClientRect().width)}(${getComputedStyle(p).display},ox:${getComputedStyle(p).overflowX})`);
+                    out.push('board chain: ' + chain.join(' < '));
+                }
+                return out;
+            }) : [];
             await page.screenshot({ path: `${out}/${device}-${name}.png`, fullPage: device === 'desktop' ? false : true });
             const bad = status >= 400 || status === 0;
             if (bad) failures++;

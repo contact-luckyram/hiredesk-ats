@@ -2,9 +2,11 @@
 
 Recruiting and onboarding system built with **Laravel 13** and **Filament 5**: post jobs, screen applicants automatically, move candidates through custom pipeline stages, schedule interviews, send offers for e-signature and onboard new hires through a paperless portal.
 
-**Live demo:** see the Render URL in the repo description — open `/admin` and click **Sign in** (login is pre-filled). Sample data resets on every deploy.
+**[Live demo](https://hiredesk-ats.onrender.com)** · [Admin](https://hiredesk-ats.onrender.com/admin) (click **Sign in**, login is pre-filled) · [Careers site](https://hiredesk-ats.onrender.com/careers)
 
-![Dashboard](docs/screenshots/desktop-admin-dashboard.png)
+Runs on Render's free plan, so the first visit after a quiet period can take about a minute to wake up. Sample data resets on every deploy.
+
+![Dashboard](docs/screenshots/dashboard.jpg)
 
 ## Features
 
@@ -31,6 +33,28 @@ Recruiting and onboarding system built with **Laravel 13** and **Filament 5**: p
 - **Dashboard** — KPIs, applications & hires trend, pipeline snapshot, upcoming interviews, SLA alerts, activity feed, open jobs, sources, onboarding progress
 - **Reports** — hiring funnel, monthly trend, source effectiveness, time to hire by department, EEO / voluntary self-ID summary, interviewer activity, CSV export
 - **Team & roles** — admin, recruiter, hiring manager
+
+## Screenshots
+
+| Hiring pipeline (Kanban) | Pipeline stages & automations |
+| --- | --- |
+| ![Pipeline](docs/screenshots/pipeline.jpg) | ![Stages](docs/screenshots/stages.jpg) |
+
+| Candidate profile | Reports |
+| --- | --- |
+| ![Candidate profile](docs/screenshots/candidate-profile.jpg) | ![Reports](docs/screenshots/reports.jpg) |
+
+| Careers site | Apply with screening questions |
+| --- | --- |
+| ![Careers](docs/screenshots/careers.jpg) | ![Apply](docs/screenshots/apply.jpg) |
+
+| Offer e-signature | New-hire portal |
+| --- | --- |
+| ![Offer](docs/screenshots/offer-sign.jpg) | ![Portal](docs/screenshots/portal.jpg) |
+
+| Mobile dashboard | Mobile careers | Mobile new-hire portal |
+| --- | --- | --- |
+| ![Mobile dashboard](docs/screenshots/mobile-dashboard.jpg) | ![Mobile careers](docs/screenshots/mobile-careers.jpg) | ![Mobile portal](docs/screenshots/mobile-portal.jpg) |
 
 ## Tech stack
 

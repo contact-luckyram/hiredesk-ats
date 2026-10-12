@@ -72,6 +72,7 @@ class WorkflowResource extends Resource
                             ->orderColumn('sort')
                             ->reorderable()
                             ->collapsible()
+                            ->collapsed()
                             ->cloneable()
                             ->defaultItems(0)
                             ->addActionLabel('Add stage')
