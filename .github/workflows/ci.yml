@@ -1,0 +1,83 @@
+name: CI
+
+# Runs the test suite and a screenshot smoke test of every demo page.
+# If a hiredesk-bundle.tar.gz is pushed (code uploaded through the GitHub web UI),
+# it is unpacked and committed first.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unpack uploaded bundle
+        run: |
+          if [ -f hiredesk-bundle.tar.gz ]; then
+            tar -xzf hiredesk-bundle.tar.gz
+            git rm -q --cached hiredesk-bundle.tar.gz && rm -f hiredesk-bundle.tar.gz
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -q -m "Unpack uploaded code bundle" && git push
+          fi
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: intl, zip, pdo_sqlite, gd
+          coverage: none
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare app
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          touch database/database.sqlite
+
+      - name: Run tests
+        run: php artisan test 2>&1 | tee test-output.txt; exit ${PIPESTATUS[0]}
+
+      - name: Seed demo and start server
+        if: always()
+        run: |
+          echo "DEMO_MODE=true" >> .env
+          php artisan migrate:fresh --seed --force
+          php artisan hiredesk:demo-urls > urls.json
+          php artisan filament:assets
+          (php artisan serve --port=8000 > server.log 2>&1 &)
+          sleep 4
+
+      - name: Screenshot smoke test
+        if: always()
+        run: |
+          npm init -y > /dev/null
+          npm install playwright@1.48.2 --no-save --silent
+          npx playwright install chromium --with-deps > /dev/null
+          node scripts/smoke-screenshots.mjs http://127.0.0.1:8000 urls.json ci-results/screenshots 2>&1 | tee smoke-output.txt; exit ${PIPESTATUS[0]}
+
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          mkdir -p ci-results
+          cp test-output.txt smoke-output.txt urls.json ci-results/ 2>/dev/null || true
+          tail -n 200 storage/logs/laravel.log > ci-results/laravel.log 2>/dev/null || true
+          cp server.log ci-results/ 2>/dev/null || true
+          cd ci-results
+          git init -q && git checkout -q -b ci-results
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "CI results for ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-results
